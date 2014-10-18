@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
-import urllib
+import urllib.request
 import re
 from urllib.parse import urljoin
 
 base_url = "http://cs61a.org"
 
-response = urllib.request.urlopen(url)
+response = urllib.request.urlopen(base_url)
 page = BeautifulSoup(response)
 
 table = page.find('table', id='calendar')
