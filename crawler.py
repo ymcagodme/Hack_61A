@@ -1,20 +1,110 @@
-from bs4 import BeautifulSoup
-import urllib.request
 import re
+import urllib.request
+import sys
+
+from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from urllib.error import *
 
 base_url = "http://cs61a.org"
+
+def full_link(relative_link):
+    if base_url in relative_link:
+        return relative_link
+    return urljoin(base_url, relative_link)
+
 
 response = urllib.request.urlopen(base_url)
 page = BeautifulSoup(response)
 
 table = page.find('table', id='calendar')
-for a in table.find_all('a'):
-    # Homework Fetch
-    if 'homework' in a.string.lower():
-        print(a.string, end=': ')
-        td = a.parent
-        link = td.find('a', text=re.compile('hw'))
-        file_link = link.get('href')
-        full_link = urljoin(base_url, file_link)
-        print(full_link)
+
+hw_pattern = 'hw\d+\.py'
+lab_pattern = 'lab\d+\.py'
+lab_extra_pattern = 'lab\d+_extra\.py'
+proj_pattern = '\S+\.zip'
+
+hw_paths = {}
+lab_paths = {}
+proj_paths = {}
+
+lab_pages = []
+proj_pages = []
+
+links = table.find_all('a')
+for link in links:
+    href = link.get('href')
+
+    # Fetch Homework
+    if re.search(hw_pattern, href):
+        name = link.string.replace(".py", "")
+        paths = hw_paths.get(name, [])
+        paths.append(full_link(href))
+        hw_paths[name] = set(paths)
+
+    # Fetch Lab Pages
+    if re.search('lab', href):
+        lab_pages.append(full_link(href))
+
+    # Fetch Project Pages
+    if re.search('proj', href):
+        proj_pages.append(full_link(href))
+
+for url in proj_pages:
+    response = urllib.request.urlopen(url)
+    page = BeautifulSoup(response)
+    links = page.find_all('a')
+    title = page.title.string.lower()
+    match = re.search('project \d+:', title)
+    if match is None:
+        match = re.search('.+\:', title)
+        s = match.start()
+        e = match.end()
+        name = title[s:e-1]
+    else:
+        s = match.start()
+        e = match.end()
+        number = (title[s:e-1]).replace("project ", "")
+        name = 'proj' + number
+    files = []
+
+    for l in links:
+        href = l.get('href')
+        if re.search(proj_pattern, href):
+            files.append(full_link(href))
+    files = set(files)
+    proj_paths[name] = files
+
+if 1:
+    print("Fetching lab...")
+    for url in lab_pages:
+        response = urllib.request.urlopen(url)
+        page = BeautifulSoup(response)
+        links = page.find_all('a')
+
+        title = page.title.string.lower()
+        match = re.search('lab \d+:', title)
+        if match is None:
+            match = re.search('.+\:', title)
+            s = match.start()
+            e = match.end()
+            name = title[s:e-1]
+        else:
+            s = match.start()
+            e = match.end()
+            number = (title[s:e-1]).replace("lab ", "")
+            name = 'lab' + number
+        files = []
+        for link in links:
+            href = link.get('href')
+            if re.search(lab_pattern, href):
+                files.append(full_link(href))
+            # TODO: Fetch the lab_extra files
+            if re.search(lab_extra_pattern, href):
+                files.append(full_link(href))
+        files = set(files)
+        lab_paths[name] = files
+
+print(hw_paths)
+print(lab_paths)
+print(proj_paths)
