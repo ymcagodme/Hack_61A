@@ -75,7 +75,7 @@ for url in proj_pages:
     files = set(files)
     proj_paths[name] = files
 
-if 1:
+if 0:
     print("Fetching lab...")
     for url in lab_pages:
         response = urllib.request.urlopen(url)
@@ -105,6 +105,36 @@ if 1:
         files = set(files)
         lab_paths[name] = files
 
-print(hw_paths)
-print(lab_paths)
-print(proj_paths)
+hw_paths = {'hw5': {'http://cs61a.org/hw/released/hw5.py'},
+         'hw3': {'http://cs61a.org/hw/released/hw3.py'},
+          'hw6': {'http://cs61a.org/hw/released/hw6.py'},
+           'hw1': {'http://cs61a.org/hw/released/hw1.py'},
+            'hw2': {'http://cs61a.org/hw/released/hw2.py'},
+             'hw4': {'http://cs61a.org/hw/released/hw4.py'}}
+
+from server import db
+from server import Assignment
+from server import Link
+
+for name, links in hw_paths.items():
+    hw = Assignment('hw', name)
+    for link in links:
+        l = Link(link, hw)
+        db.session.add(l)
+    db.session.add(hw)
+
+# for name, links in lab_paths.items():
+#     lab = Assignment('lab', name)
+#     for link in links:
+#         l = Link(l, lab)
+#         db.session.add(l)
+#     db.session.add(hw)
+
+# for name, links in proj_paths.items():
+#     proj = Assignment('proj', name)
+#     for link in links:
+#         l = Link(l, proj)
+#         db.session.add(l)
+#     db.session.add(proj)
+
+db.session.commit()

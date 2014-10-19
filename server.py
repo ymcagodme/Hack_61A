@@ -2,43 +2,41 @@ import sqlite3
 import os
 from contextlib import closing
 from flask import Flask, g, flash
+from flask.ext.sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # DATABASE = './links.db'
 app = Flask(__name__)
 
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'links.db'),
-    DEBUG=True,
-    SECRET_KEY='development key'
-))
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+db = SQLAlchemy(app)
 
-def connect_db():
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv
+class Link(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    link = db.Column(db.String)
 
-@app.teardown_appcontext
-def close_db(error):
-    """Closes the database again at the end of the request."""
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignment.id'))
+    assignment = db.relationship('Assignment', backref=db.backref('links', lazy='dynamic'))
 
-def get_db():
-    """Opens a new database connection if there is none yet for the
-    current application context.
-    """
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
+    def __init__(self, link, assignment):
+        self.link = link
+        self.assignment = assignment
 
-def init_db():
-    """Initializes the database."""
-    db = get_db()
-    with app.open_resource('schema.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
+    def __repr__(self):
+        return '<Link %r>' % self.link
+
+
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    kind = db.Column(db.String)
+    name = db.Column(db.String, unique=True)
+
+    def __init__(self, kind, name):
+        self.kind = kind
+        self.name = name
+
+    def __repr__(self):
+        return '<Assignment %r>' % self.name
 
 @app.route('/add/<link>')
 def add_links(link):
