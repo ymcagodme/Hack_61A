@@ -6,7 +6,6 @@ from flask import Flask, g, flash, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# DATABASE = './links.db'
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
