@@ -68,13 +68,30 @@ def list_option():
     hw_json = m_json.loads(hw_response.decode('utf8'))
     lab_json = m_json.loads(lab_response.decode('utf8'))
     proj_json = m_json.loads(proj_response.decode('utf8'))
-    print("All current available assignment:")
+    hw_list = []
+    lab_list = []
+    proj_list = []
     for item in sorted(hw_json):
-        print(item)
+        hw_list.append(item)
     for item in sorted(lab_json):
-        print(item)
+        lab_list.append(item)
     for item in sorted(proj_json):
-        print(item)
+        proj_list.append(item)
+    total = len(hw_list) + len(lab_list) + len(proj_list)
+    print("Available assignments ({0})".format(total))
+    print('-----------------------------')
+    print("===== Homeworks ({0}) =====".format(len(hw_list)))
+    for hw in hw_list:
+        print(" - " + hw)
+    print()
+    print("===== Labs ({0}) =====".format(len(lab_list)))
+    for lab in lab_list:
+        print(" - " + lab)
+    print()
+    print("===== Projects ({0}) =====".format(len(proj_list)))
+    for proj in proj_list:
+        print(" - " + proj)
+    print()
 
 # def sync_option():
     # login = input("Login(cs61a-xx): ")
