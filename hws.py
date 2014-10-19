@@ -35,13 +35,13 @@ def init_work_option(work_name):
         work_folder_name = ""
         if (work_name in hw_json):
             file_url_lst = hw_json[work_name]
-            work_folder_name = "hw/"
+            # work_folder_name = "hw/"
         elif (work_name in lab_json):
             file_url_lst = lab_json[work_name]
-            work_folder_name = "lab/"
+            # work_folder_name = "lab/"
         elif (work_name in proj_json):
             file_url_lst = proj_json[work_name]
-            work_folder_name = "proj/"
+            # work_folder_name = "proj/"
         path = work_folder_name + work_name
         os.makedirs(path)
         for link in file_url_lst:
@@ -76,8 +76,22 @@ def list_option():
     for item in sorted(proj_json):
         print(item)
 
-def sync_option():
-    print("Sync option")
+# def sync_option():
+    # login = input("Login(cs61a-xx): ")
+    # login_string = login + "@torus.cs.berkeley.edu"
+    # cur_path = os.getcwd()
+    # lst = cur_path.split('/')
+    # index = 0
+    # remote_path = "~/"
+    # for i in range(len(lst)):
+    #     if lst[i] == 'cs61a':
+    #         index = i
+    #         break
+    # for i in range(index, len(lst)):
+    #     remote_path += lst[i] + "/"
+    #     call(['ssh', login_string, "mkdir " + remote_path])
+    # call(['scp', '*', login_string + ":~" + remote_path])
+    # print("Sync option")
 
 func_name = args_list[0]
 
