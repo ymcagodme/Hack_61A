@@ -75,7 +75,7 @@ for url in proj_pages:
     files = set(files)
     proj_paths[name] = files
 
-if 0:
+if 1:
     print("Fetching lab...")
     for url in lab_pages:
         response = urllib.request.urlopen(url)
@@ -105,13 +105,6 @@ if 0:
         files = set(files)
         lab_paths[name] = files
 
-hw_paths = {'hw5': {'http://cs61a.org/hw/released/hw5.py'},
-         'hw3': {'http://cs61a.org/hw/released/hw3.py'},
-          'hw6': {'http://cs61a.org/hw/released/hw6.py'},
-           'hw1': {'http://cs61a.org/hw/released/hw1.py'},
-            'hw2': {'http://cs61a.org/hw/released/hw2.py'},
-             'hw4': {'http://cs61a.org/hw/released/hw4.py'}}
-
 from server import db
 from server import Assignment
 from server import Link
@@ -128,7 +121,7 @@ for name, links in hw_paths.items():
 #     for link in links:
 #         l = Link(l, lab)
 #         db.session.add(l)
-#     db.session.add(hw)
+#     db.session.add(lab)
 
 # for name, links in proj_paths.items():
 #     proj = Assignment('proj', name)
