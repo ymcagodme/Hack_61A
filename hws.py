@@ -20,7 +20,7 @@ def init_option():
         os.makedirs(path + "/lab")
         os.makedirs(path + "/proj")
     except OSError as exception:
-        print("exists " + path + " folder")
+        print("Exists " + path + " Folder")
     print("Initialized CS61A Working Folder")
 
 def init_work_option(work_name):
