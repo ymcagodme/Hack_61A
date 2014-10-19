@@ -43,7 +43,7 @@ class Assignment(db.Model):
 def projs():
     results = {}
     for a in Assignment.query.filter_by(kind='proj').all():
-        links = json.dumps([l.link for l in a.links.all()])
+        links = [l.link for l in a.links.all()]
         results.update({a.name: links})
     return jsonify(results)
 
@@ -51,7 +51,7 @@ def projs():
 def labs():
     results = {}
     for a in Assignment.query.filter_by(kind='lab').all():
-        links = json.dumps([l.link for l in a.links.all()])
+        links = [l.link for l in a.links.all()]
         results.update({a.name: links})
     return jsonify(results)
 
@@ -59,7 +59,7 @@ def labs():
 def hws():
     results = {}
     for a in Assignment.query.filter_by(kind='hw').all():
-        links = json.dumps([l.link for l in a.links.all()])
+        links = [l.link for l in a.links.all()]
         results.update({a.name: links})
     return jsonify(results)
 
