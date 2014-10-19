@@ -39,14 +39,6 @@ class Assignment(db.Model):
     def __repr__(self):
         return '<Assignment %r>' % self.name
 
-@app.route('/add/<link>')
-def add_links(link):
-    db = get_db()
-    db.cursor().execute('insert into entries (year, term, type, title, link, checksum) values (?, ?, ?, ?, ?, ?)',
-                ["2014", "Fall", "hw", link, link, "123"])
-    db.commit()
-    return link
-
 @app.route('/hws')
 def hws():
     results = {}

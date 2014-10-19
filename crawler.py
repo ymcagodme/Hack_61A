@@ -109,25 +109,25 @@ from server import db
 from server import Assignment
 from server import Link
 
-for name, links in hw_paths.items():
-    hw = Assignment('hw', name)
-    for link in links:
-        l = Link(link, hw)
-        db.session.add(l)
-    db.session.add(hw)
+# for name, links in hw_paths.items():
+#     hw = Assignment('hw', name)
+#     for link in links:
+#         l = Link(link, hw)
+#         db.session.add(l)
+#     db.session.add(hw)
 
 # for name, links in lab_paths.items():
 #     lab = Assignment('lab', name)
 #     for link in links:
-#         l = Link(l, lab)
+#         l = Link(link, lab)
 #         db.session.add(l)
 #     db.session.add(lab)
 
 # for name, links in proj_paths.items():
 #     proj = Assignment('proj', name)
 #     for link in links:
-#         l = Link(l, proj)
+#         l = Link(link, proj)
 #         db.session.add(l)
 #     db.session.add(proj)
 
-db.session.commit()
+# db.session.commit()
