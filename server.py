@@ -39,11 +39,16 @@ class Assignment(db.Model):
     def __repr__(self):
         return '<Assignment %r>' % self.name
 
-@app.route('/hws')
+@app.route('/labs/')
+def labs():
+    results = {}
+
+@app.route('/hws/')
 def hws():
     results = {}
-    for a in Assignment.query.all():
-        results.update({a.name: a.links.all()[0].link})
+    for a in Assignment.query.filter_by(kind='hw').all():
+        links = json.dumps([l.link for l in a.links.all()])
+        results.update({a.name: links})
     return jsonify(results)
 
 @app.route('/')
