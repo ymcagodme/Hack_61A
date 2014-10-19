@@ -8,7 +8,7 @@ from urllib.error import *
 
 base_url = "http://cs61a.org"
 
-def full_link(relative_link):
+def full_link(relative_link, base_url="http://cs61a.org"):
     if base_url in relative_link:
         return relative_link
     return urljoin(base_url, relative_link)
@@ -71,7 +71,7 @@ for url in proj_pages:
     for l in links:
         href = l.get('href')
         if re.search(proj_pattern, href):
-            files.append(full_link(href))
+            files.append(full_link(href, url))
     files = set(files)
     proj_paths[name] = files
 
@@ -98,10 +98,9 @@ if 1:
         for link in links:
             href = link.get('href')
             if re.search(lab_pattern, href):
-                files.append(full_link(href))
-            # TODO: Fetch the lab_extra files
+                files.append(full_link(href, url))
             if re.search(lab_extra_pattern, href):
-                files.append(full_link(href))
+                files.append(full_link(href, url))
         files = set(files)
         lab_paths[name] = files
 
@@ -109,25 +108,25 @@ from server import db
 from server import Assignment
 from server import Link
 
-# for name, links in hw_paths.items():
-#     hw = Assignment('hw', name)
-#     for link in links:
-#         l = Link(link, hw)
-#         db.session.add(l)
-#     db.session.add(hw)
+for name, links in hw_paths.items():
+    hw = Assignment('hw', name)
+    for link in links:
+        l = Link(link, hw)
+        db.session.add(l)
+    db.session.add(hw)
 
-# for name, links in lab_paths.items():
-#     lab = Assignment('lab', name)
-#     for link in links:
-#         l = Link(link, lab)
-#         db.session.add(l)
-#     db.session.add(lab)
+for name, links in lab_paths.items():
+    lab = Assignment('lab', name)
+    for link in links:
+        l = Link(link, lab)
+        db.session.add(l)
+    db.session.add(lab)
 
-# for name, links in proj_paths.items():
-#     proj = Assignment('proj', name)
-#     for link in links:
-#         l = Link(link, proj)
-#         db.session.add(l)
-#     db.session.add(proj)
+for name, links in proj_paths.items():
+    proj = Assignment('proj', name)
+    for link in links:
+        l = Link(link, proj)
+        db.session.add(l)
+    db.session.add(proj)
 
-# db.session.commit()
+db.session.commit()
