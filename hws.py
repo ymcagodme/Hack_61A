@@ -4,9 +4,9 @@ import urllib.request
 from subprocess import call
 import json as m_json
 
-parser = argparse.ArgumentParser(prog='hws')
+parser = argparse.ArgumentParser(prog='hw')
 parser.add_argument('init', nargs='+', help='[assingment name]')
-parser.add_argument('list', nargs='+', help='List all available assignments')
+# parser.add_argument('list', nargs='+', help='List all available assignments')
 
 args = parser.parse_args()
 dict_args = vars(args)
