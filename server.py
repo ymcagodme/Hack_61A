@@ -1,7 +1,8 @@
 import sqlite3
 import os
+import json
 from contextlib import closing
-from flask import Flask, g, flash
+from flask import Flask, g, flash, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -46,10 +47,16 @@ def add_links(link):
     db.commit()
     return link
 
+@app.route('/hws')
+def hws():
+    results = {}
+    for a in Assignment.query.all():
+        results.update({a.name: a.links.all()[0].link})
+    return jsonify(results)
+
 @app.route('/')
 def hello_world():
-    init_db()
     return "Hello World!"
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
